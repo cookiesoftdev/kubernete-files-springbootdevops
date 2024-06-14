@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+      - name: springboot-app
+        image: cookiesoftdev/springbootdevops:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://143.198.26.53:5432/db_devops
+        - name: SPRING_DATASOURCE_USERNAME
+          value: user_devops
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: Ramon2020!
+        - name: SPRING_DATASOURCE_DRIVER
+          value: org.postgresql.Driver
+        - name: SPRING_JPA_DATABASE_PLATFORM
+          value: org.hibernate.dialect.PostgreSQLDialect
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: update
+        - name: DOCKER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: DOCKER_USERNAME
+        - name: DOCKER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: DOCKER_PASSWORD
